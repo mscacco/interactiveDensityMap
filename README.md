@@ -1,4 +1,4 @@
-# Name of App *Rasterize Variable On Leaflet Map*
+# Rasterize Variable On Leaflet Map
 
 MoveApps
 
