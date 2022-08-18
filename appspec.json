@@ -1,83 +1,80 @@
 {
   "settings": [
     {
-      "id": "testString",
-      "name": "Insert title of string setting",
-      "description": "Insert description for string setting",
-      "defaultValue": null,
+      "id": "entity",
+      "name": "Variable to rasterize",
+      "description": "Choose the variable that you want to rasterize. The app will count the number of instances of that variable in each pixel of the raster.",
+      "defaultValue": "n_locations",
       "type": "STRING"
     },
     {
-      "id": "testInstant",
-      "name": "Insert title of instant setting",
-      "description": "Insert description for instant setting",
-      "defaultValue": null,
-      "type": "INSTANT"
-    },
-    {
-      "id": "testString2",
-      "name": "Insert title of String setting",
-      "description": "Insert description for string setting",
-      "defaultValue": null,
-      "type": "RADIOBUTTONS",
-      "options": [
-        {
-          "value": "example-value",
-          "displayText": "Example option"
-        }
-      ]
+      "id": "pxSize",
+      "name": "Raster resolution in degrees",
+      "description": "Specify the desired pixel size in degrees of the grid used to rasterize the chosen variable.",
+      "defaultValue": 0.05,
+      "type": "NUMERIC"
     }
   ],
-  "dependencies": {
+   "dependencies": {
     "R": [
       {
-        "name": "lubridate",
-        "version": "1.7.10"
-      },
-	  {
         "name": "move"
+      },
+      {
+        "name": "shiny"
+      },
+	        {
+        "name": "sp"
+      },
+	        {
+        "name": "raster"
+      },
+	        {
+        "name": "mapview"
+      },
+	        {
+        "name": "leaflet"
+      },
+	        {
+        "name": "RColorBrewer"
       }
     ]
   },
-  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },
   "language": "eng",
   "keywords": [
-    "example",
-    "template"
+    "map",
+    "leaflet",
+    "raster",
+    "density",
+    "shiny",
+    "interactive"
   ],
   "people": [
     {
-      "firstName": "Charles",
+      "firstName": "Martina",
       "middleInitials": null,
-      "lastName": "Darwin",
-      "email": "creator@example.com",
-      "roles": [
-        "author",
-        "creator"
-      ],
+      "lastName": "Scacco",
+      "email": "mscacco@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": "0000-0003-4821-4051",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+	{
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author","reviewer"],
       "orcid": null,
-      "affiliation": null,
-      "affiliationRor": null
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
     }
   ],
-  "funding": [
-    {
-	"name": "funder name",
-	"comment": "grant for App"
-    }
-  ],
-  "references": [
-    {
-	"type": "IsDescribedBy",
-	"note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
-	"url": "https://anylink.xyz"
-    }
-  ],
-  "documentation": {
-    "url": "https://github.com/movestore/my-app/README.md"
+  "documentation" : {
+    "url": "https://github.com/movestore/rasterizeOnLeaflet/blob/master/README.md"
   }
 }
-

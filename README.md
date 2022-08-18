@@ -1,36 +1,26 @@
-# Name of App *(give the App a name, please stick to our convention of Title Case without hyphens (e.g. My New App))*
+# Name of App *Rasterize Variable On Leaflet Map*
 
 MoveApps
 
-Github repository: *github.com/movestore/Name-of-App* *(the link to the repository where the code of the app can be found must be provided)*
-
+Github repository: *github.com/movestore/rasterizeOnLeaflet*
 ## Description
-*Enter here the short description of the App that might also be used when filling out the description when submitting the App to Moveapps. This text is directly presented to Users that look through the list of Apps when compiling Workflows.*
+Raster containing the number of instances of the specified variable overlaid on a shiny leaflet map. The user can choose between displaying the number of GPS locations per pixel, the number of individuals, the number of species or the number of Movebank studies (this last one yet to implement). The variable is rasterized on a grid of user-defined resolution (pixel size) and overlaid on a leaflet map. The leaflet map can be interactively zoomed, and the background openstreetmap can be selected as `TopoMap`or `Aerial`. The map interactively updates when the user selects a different `entity` variable or raster pixel size. *Suggestion: if the chosen dataset covers a large area and at first you do not see the raster on the map, try increasing the pixel size.*
 
 ## Documentation
-*Enter here a detailed description of your App. What is it intended to be used for. Which steps of analyses are performed and how. Please be explicit about any detail that is important for use and understanding of the App and its outcomes.*
+This App creates a Shiny UI that allows the interactive visualization of the number of GPS locations, number of individuals and species in different regions of the map. This App extracts from the MoveStack the variable `entity` selected by the user (by default the number of GPS locations) and count the number of instances falling in each raster cell. For further analyses the input data set is also returned.
 
 ### Input data
-*Indicate which type of input data the App requires. Currently only R objects of class `MoveStack` can be used. This will be extend in the future.*
-
-*Example*: MoveStack in Movebank format
+MoveStack in Movebank format.
 
 ### Output data
-*Indicate which type of output data the App produces to be passed on to subsequent apps. Currently only R objects of class `MoveStack` can be used. This will be extend in the future. In case the App does not pass on any data (e.g. a shiny visualization app), it can be also indicated here that no output is produced to be used in subsequent apps.*
-
-*Example:* MoveStack in Movebank format
+Shiny user interface (UI) and MoveStack in Movebank format.
 
 ### Artefacts
-*If the App creates artefacts (e.g. csv, pdf, jpeg, shapefiles, etc), please list them here and describe each.*
-
-*Example:* `rest_overview.csv`: csv-file with Table of all rest site properties
+The visualization produced by the App can be downloaded in *.png* format. The downloaded file is: `Leaflet_densityMap.png`
 
 ### Parameters 
-*Please list and define all parameters that the App requires to be set, if necessary including their unit.*
-
-*Example:* `radius`: Defined radius the animal has to stay in for a given duration of time for it to be considered resting site. Unit: `metres`.
+`entity`: variable that the user wants to be rasterized as number of occurrences per raster cell. The user can choose one of `n_locations` (default), `n_individuals`, `n_species` or `n_studies`.
+`pxSize`: desired resolution (pixel size) of the grid used to rasterize the chosen variable. Unit is in degree with a possible range of *0.01* to *5* degrees (corresponding to about 1 to 500 km). Default value is *0.1*.
 
 ### Null or error handling
-*Please indicate for each parameter as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if parameters are improperly set and any other important information that you find the user should be aware of.*
-
-*Example:* **Parameter `radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
+If one of the user parameters are not defined the App will use the default values (`entity` = `n_locations` and `pxSize` = *0.1*)
