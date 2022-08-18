@@ -3,6 +3,7 @@
 MoveApps
 
 Github repository: *github.com/movestore/rasterizeOnLeaflet*
+
 ## Description
 Raster containing the number of instances of the specified variable overlaid on a shiny leaflet map. The user can choose between displaying the number of GPS locations per pixel, the number of individuals, the number of species or the number of Movebank studies (this last one yet to implement). The variable is rasterized on a grid of user-defined resolution (pixel size) and overlaid on a leaflet map. The leaflet map can be interactively zoomed, and the background openstreetmap can be selected as `TopoMap`or `Aerial`. The map interactively updates when the user selects a different `entity` variable or raster pixel size. *Suggestion: if the chosen dataset covers a large area and at first you do not see the raster on the map, try increasing the pixel size.*
 
