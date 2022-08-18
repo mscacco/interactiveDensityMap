@@ -1,0 +1,83 @@
+{
+  "settings": [
+    {
+      "id": "testString",
+      "name": "Insert title of string setting",
+      "description": "Insert description for string setting",
+      "defaultValue": null,
+      "type": "STRING"
+    },
+    {
+      "id": "testInstant",
+      "name": "Insert title of instant setting",
+      "description": "Insert description for instant setting",
+      "defaultValue": null,
+      "type": "INSTANT"
+    },
+    {
+      "id": "testString2",
+      "name": "Insert title of String setting",
+      "description": "Insert description for string setting",
+      "defaultValue": null,
+      "type": "RADIOBUTTONS",
+      "options": [
+        {
+          "value": "example-value",
+          "displayText": "Example option"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "R": [
+      {
+        "name": "lubridate",
+        "version": "1.7.10"
+      },
+	  {
+        "name": "move"
+      }
+    ]
+  },
+  "createsArtifacts": true,
+  "license": {
+    "key": "MIT"
+  },
+  "language": "eng",
+  "keywords": [
+    "example",
+    "template"
+  ],
+  "people": [
+    {
+      "firstName": "Charles",
+      "middleInitials": null,
+      "lastName": "Darwin",
+      "email": "creator@example.com",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": null,
+      "affiliation": null,
+      "affiliationRor": null
+    }
+  ],
+  "funding": [
+    {
+	"name": "funder name",
+	"comment": "grant for App"
+    }
+  ],
+  "references": [
+    {
+	"type": "IsDescribedBy",
+	"note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
+	"url": "https://anylink.xyz"
+    }
+  ],
+  "documentation": {
+    "url": "https://github.com/movestore/my-app/README.md"
+  }
+}
+
