@@ -5,6 +5,7 @@ library(raster)
 library(RColorBrewer)
 library(mapview)
 library(leaflet)
+library(leaflegend)
 
 
 shinyModuleUserInterface <- function(id, label, entity = "n_locations", pxSize = 0.1) {
@@ -40,7 +41,7 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
                                  data=as.data.frame(data), 
                                  proj4string=CRS("+proj=longlat +ellps=WGS84 +no_defs"))
     SP$rowNum <- 1:nrow(SP)
-    rr <- raster(ext=extent(SP), resolution=input$pxSize, crs =CRS("+proj=longlat +ellps=WGS84 +no_defs"), vals=NULL)
+    rr <- raster(ext=extent(SP), resolution=input$pxSize, crs=CRS("+proj=longlat +ellps=WGS84 +no_defs"), vals=NULL)
     
     if(input$entity=="n_locations"){
       SPr <- rasterize(SP, rr, field="rowNum", fun="count", update=TRUE) #why do we need update=T?
@@ -57,8 +58,21 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
     # }
     bounds <- as.vector(bbox(extent(data)))
     SPr_l <- projectRasterForLeaflet(SPr, method = "ngb")
-    brewCol <- brewer.pal(7, name = "YlGnBu")
-    rPal <- colorNumeric(brewCol, values(SPr_l), na.color = "transparent", reverse = T)
+    
+    myBins <- ifelse(length(unique(values(SPr_l))) <= 7, length(unique(values(SPr_l))), 7)
+    brewCol <- brewer.pal(7, name = "YlGnBu")[1:myBins]
+    if(myBins >= 7){
+      rPal <- colorNumeric(brewCol, values(SPr_l), na.color = "transparent", reverse = T)
+    }else{
+      rPal <- colorFactor(brewCol, as.factor(1:max(values(SPr_l))), na.color = "transparent", reverse = T)}
+    
+    # if(input$entity=="n_locations"){
+    #   brewCol <- brewer.pal(7, name = "YlGnBu")
+    #   rPal <- colorNumeric(brewCol, values(SPr_l), na.color = "transparent", reverse = T)
+    # }else{
+    #   brewCol <- brewer.pal(myBins, name = "YlGnBu")
+    #   rPal <- colorBin(brewCol, values(SPr_l), bins=7, na.color = "transparent", reverse = T)
+    # }
 
     outl <- leaflet() %>% 
       fitBounds(bounds[1], bounds[2], bounds[3], bounds[4]) %>% 
@@ -66,15 +80,25 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
       addProviderTiles("Esri.WorldTopoMap", group = "TopoMap") %>%
       addProviderTiles("Esri.WorldImagery", group = "Aerial") %>%
       addRasterImage(SPr_l, colors = rPal, opacity = 0.7, project = FALSE, group = "raster") %>%
-      addLegend(position="topright", opacity = 0.6, bins = 7,
-                pal = rPal, values = values(SPr_l), title = legendTitle) %>%
       addScaleBar(position="bottomright",
                   options=scaleBarOptions(maxWidth = 100, metric = TRUE, imperial = FALSE, updateWhenIdle = TRUE)) %>%
       addLayersControl(
         baseGroups = c("TopoMap","Aerial"),
         overlayGroups = "raster",
-        options = layersControlOptions(collapsed = FALSE)
-      )
+        options = layersControlOptions(collapsed = FALSE)) #%>%
+      # addLegend(position="topright", opacity = 0.6,
+      #              pal = rPal, values = values(SPr_l), title = legendTitle)
+    
+    if(input$entity=="n_locations"){
+      outl <- outl %>%
+        addLegend(position="topright", opacity = 0.6, bins = 7,
+                  pal = rPal, values = values(SPr_l), title = legendTitle)
+    }else{
+      outl <- outl %>%
+        addLegend(position="topright", opacity = 0.6, 
+                  pal = rPal, values = unique(values(SPr_l)), title = legendTitle)
+    }
+    
     outl   
   })
   

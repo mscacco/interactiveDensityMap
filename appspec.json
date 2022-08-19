@@ -37,6 +37,9 @@
       },
 	        {
         "name": "RColorBrewer"
+      },
+	        {
+        "name": "leaflegend"
       }
     ]
   },
