@@ -22,7 +22,7 @@ shinyModuleUserInterface <- function(id, label, entity = "n_locations", pxSize =
     sliderInput(inputId = ns("pxSize"), 
                 label = "Choose the raster cell resolution in degrees", 
                 value = pxSize, min = 0.01, max = 5), # range of about 1 km to 500 km
-    leafletOutput(ns("leafmap"), height="70vh"),
+    leafletOutput(ns("leafmap"), height="80vh"),
     downloadButton(ns('savePlot'), 'Save Plot')
   )
 }
@@ -59,21 +59,18 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
     bounds <- as.vector(bbox(extent(data)))
     SPr_l <- projectRasterForLeaflet(SPr, method = "ngb")
     
-    myBins <- ifelse(length(unique(values(SPr_l))) <= 7, length(unique(values(SPr_l))), 7)
-    brewCol <- brewer.pal(7, name = "YlGnBu")[1:myBins]
-    if(myBins >= 7){
-      rPal <- colorNumeric(brewCol, values(SPr_l), na.color = "transparent", reverse = T)
-    }else{
-      rPal <- colorFactor(brewCol, as.factor(1:max(values(SPr_l))), na.color = "transparent", reverse = T)}
+    if(max(values(SPr_l), na.rm=T) <= 7){
+      myBins <- length(1:max(values(SPr_l), na.rm=T))
+    }else{myBins <- 7}
     
-    # if(input$entity=="n_locations"){
-    #   brewCol <- brewer.pal(7, name = "YlGnBu")
-    #   rPal <- colorNumeric(brewCol, values(SPr_l), na.color = "transparent", reverse = T)
-    # }else{
-    #   brewCol <- brewer.pal(myBins, name = "YlGnBu")
-    #   rPal <- colorBin(brewCol, values(SPr_l), bins=7, na.color = "transparent", reverse = T)
-    # }
-
+    brewCol <- brewer.pal(7, name = "YlGnBu")[1:myBins]
+    if(myBins == 7){
+      rPal <- colorBin(brewCol, 1:max(values(SPr_l), na.rm=T), na.color = "transparent", reverse = T, bins=myBins)
+      #rPal <- colorNumeric(brewCol, 1:max(values(SPr_l), na.rm=T), na.color = "transparent", reverse = T)
+    }else{
+      rPal <- colorFactor(brewCol, as.factor(1:max(values(SPr_l), na.rm=T)), na.color = "transparent", reverse = T)
+    }
+    
     outl <- leaflet() %>% 
       fitBounds(bounds[1], bounds[2], bounds[3], bounds[4]) %>% 
       addTiles() %>%
@@ -86,17 +83,17 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
         baseGroups = c("TopoMap","Aerial"),
         overlayGroups = "raster",
         options = layersControlOptions(collapsed = FALSE)) #%>%
-      # addLegend(position="topright", opacity = 0.6,
-      #              pal = rPal, values = values(SPr_l), title = legendTitle)
+    # addLegend(position="topright", opacity = 0.6,
+    #              pal = rPal, values = values(SPr_l), title = legendTitle)
     
     if(input$entity=="n_locations"){
       outl <- outl %>%
-        addLegend(position="topright", opacity = 0.6, bins = 7,
-                  pal = rPal, values = values(SPr_l), title = legendTitle)
+        addLegend(position="topright", bins = myBins, opacity = 0.6,
+                  pal = rPal, values = 1:max(values(SPr_l), na.rm=T), title = legendTitle)
     }else{
       outl <- outl %>%
         addLegend(position="topright", opacity = 0.6, 
-                  pal = rPal, values = unique(values(SPr_l)), title = legendTitle)
+                  pal = rPal, values = as.factor(1:max(values(SPr_l), na.rm=T)), title = legendTitle)
     }
     
     outl   
