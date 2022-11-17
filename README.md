@@ -21,6 +21,7 @@ Shiny user interface (UI) and MoveStack in Movebank format.
 
 ### Parameters 
 `entity`: variable that the user wants to be rasterized as number of occurrences per raster cell. The user can choose one of `n_locations` (default), `n_individuals`, `n_species` or `n_studies`.
+
 `pxSize`: desired resolution (pixel size) of the grid used to rasterize the chosen variable. Unit is in degree with a possible range of *0.01* to *5* degrees (corresponding to about 1 to 500 km). Default value is *0.1*.
 
 ### Null or error handling
