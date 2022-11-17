@@ -6,34 +6,30 @@ library(RColorBrewer)
 library(mapview)
 library(leaflet)
 library(leaflegend)
+# webshot::install_phantomjs()
 
-
-shinyModuleUserInterface <- function(id, label, entity = "n_locations", pxSize = 0.1) {
+shinyModuleUserInterface <- function(id, label) {
   ns <- NS(id)
   
   tagList(
-    titlePanel("Rasterize n. observations/individuals/species on leaflet map"),
+    titlePanel("Rasterize n. observations/individuals/species/studies on interactive map"),
     selectInput(inputId = ns("entity"), 
                 label = "Choose which entity you want to rasterize", 
                 choices = list( "N. of GPS locations" = "n_locations", 
                                 "N. of individuals" = "n_individuals", 
-                                "N. of species" = "n_species"), #, "N. of Movebank studies" = "n_studies"),
-                selected = entity),
+                                "N. of species" = "n_species", 
+                                "N. of Movebank studies" = "n_studies"),
+                selected = "n_locations"),
     sliderInput(inputId = ns("pxSize"), 
                 label = "Choose the raster cell resolution in degrees", 
-                value = pxSize, min = 0.01, max = 5), # range of about 1 km to 500 km
-    leafletOutput(ns("leafmap"), height="80vh"),
-    downloadButton(ns('savePlot'), 'Save Plot')
+                value = 0.1, min = 0.01, max = 5), # range of about 1 km to 500 km
+    leafletOutput(ns("leafmap"), height="70vh"),
+    actionButton(ns('savePlot'), 'Save Plot')
+    # downloadButton(ns('savePlot'), 'Save Plot')
   )
 }
 
-# shinyModuleConfiguration <- function(id, input) { ## inclusion of this function is optional. To be used if one would like the user to set values of parameters before executing the shiny app. See user manual.
-#   ns <- NS(id)
-#   configuration <- list()
-#   configuration
-# }
-
-shinyModule <- function(input, output, session, data, entity = "n_locations", pxSize = 0.1) {
+shinyModule <- function(input, output, session, data) {
   current <- reactiveVal(data) 
   
   rmap <- reactive({
@@ -52,10 +48,10 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
     }else if(input$entity=="n_species"){
       SPr <- rasterize(SP, rr, field="taxon_canonical_name", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
       legendTitle <- "N. of species"
-    } #else if(input$entity=="n_studies"){
-    #   SPr <- rasterize(SP, rr, field="study.name", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
-    #   legendTitle <- "N. of Movebank studies"
-    # }
+    } else if(input$entity=="n_studies"){
+      SPr <- rasterize(SP, rr, field="study.id", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
+      legendTitle <- "N. of Movebank studies"
+    }
     bounds <- as.vector(bbox(extent(data)))
     SPr_l <- projectRasterForLeaflet(SPr, method = "ngb")
     
@@ -104,22 +100,32 @@ shinyModule <- function(input, output, session, data, entity = "n_locations", px
     rmap()  
   })  
   
-  ### save map, takes some seconds ###
-  output$savePlot <- downloadHandler(
-    filename = function() {
-      paste("Leaflet_densityMap.png", sep="")
-    },
-    content = function(file) {
-      leafmap <- rmap()
-      mapshot( x = leafmap
-               , remove_controls = "zoomControl"
-               , file = file
-               , cliprect = "viewport"
-               , selfcontained = FALSE)
-    }
-  )
+  ## save plot to moveapps output folder to be able to link it with API
+  ## once shiny can save settings on moveapps, figure out how to save automatically, without hitting the save plot button
+  observeEvent("savePlot", {
+    mymap <- rmap()
+    mapshot( x = mymap
+             , remove_controls = "zoomControl"
+             , file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"DensityMap.png")
+             , cliprect = "viewport"
+             , selfcontained = FALSE)
+  })
   
   
+  # ### save map, takes some seconds ### here user can choose directory
+  # output$savePlot <- downloadHandler(
+  #   filename = function() {
+  #     paste("Leaflet_densityMap.png", sep="")
+  #   },
+  #   content = function(file) {
+  #     leafmap <- rmap()
+  #     mapshot( x = leafmap
+  #              , remove_controls = "zoomControl"
+  #              , file = file
+  #              , cliprect = "viewport"
+  #              , selfcontained = FALSE)
+  #   }
+  # )
   return(reactive({ current() }))
 }
 
