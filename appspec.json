@@ -1,20 +1,5 @@
 {
-  "settings": [
-    {
-      "id": "entity",
-      "name": "Variable to rasterize",
-      "description": "Choose the variable that you want to rasterize. The app will count the number of instances of that variable in each pixel of the raster.",
-      "defaultValue": "n_locations",
-      "type": "STRING"
-    },
-    {
-      "id": "pxSize",
-      "name": "Raster resolution in degrees",
-      "description": "Specify the desired pixel size in degrees of the grid used to rasterize the chosen variable.",
-      "defaultValue": 0.05,
-      "type": "NUMERIC"
-    }
-  ],
+  "settings": [],
    "dependencies": {
     "R": [
       {
@@ -71,13 +56,13 @@
       "middleInitials": "K",
       "lastName": "Scharf",
       "email": "ascharf@ab.mpg.de",
-      "roles": ["author","reviewer"],
+      "roles": ["contributor","reviewer"],
       "orcid": null,
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
     }
   ],
   "documentation" : {
-    "url": "https://github.com/movestore/rasterizeOnLeaflet/blob/master/README.md"
+    "url": "https://github.com/movestore/interactiveDensityMap/blob/master/README.md"
   }
 }

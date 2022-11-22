@@ -14,27 +14,19 @@ shinyModuleUserInterface <- function(id, label) {
   
   tagList(
     titlePanel("Rasterize n. observations/individuals/species/studies on interactive map"),
-    fluidPage(
-      fluidRow(
-        column(1, selectInput(inputId = ns("var"), 
-                              label = "Choose the variable you want to rasterize", 
-                              choices = list( "N. of GPS locations" = "n_locations", 
-                                              "N. of individuals" = "n_individuals", 
-                                              "N. of species" = "n_species", 
-                                              "N. of Movebank studies" = "n_studies"),
-                              selected = "n_locations")),
-        column(1, checkboxInput(inputId = ns("reverse"), 
-                                label = "Reverse color palette", 
-                                value = FALSE)), #by default false
-        column(3, sliderInput(inputId = ns("pxSize"), 
-                              label = "Choose the raster cell resolution in degrees", 
-                              value = 0.1, min = 0.01, max = 5)), # range in deg, from about 1 km to 500 km
-        #fluidRow(column(2, verbatimTextOutput("value")))
-      ),
-      leafletOutput(ns("leafmap"), height="70vh"),
-      actionButton(ns('savePlot'), 'Save Plot')
-      # downloadButton(ns('savePlot'), 'Save Plot')
-    )
+    selectInput(inputId = ns("var"), 
+                label = "Choose the variable you want to rasterize", 
+                choices = list( "N. of GPS locations" = "n_locations", 
+                                "N. of individuals" = "n_individuals", 
+                                "N. of species" = "n_species", 
+                                "N. of Movebank studies" = "n_studies"),
+                selected = "n_locations"),
+    sliderInput(inputId = ns("pxSize"), 
+                label = "Choose the raster cell resolution in degrees", 
+                value = 0.1, min = 0.01, max = 5), # range of about 1 km to 500 km
+    leafletOutput(ns("leafmap"), height="70vh"),
+    actionButton(ns('savePlot'), 'Save Plot')
+    # downloadButton(ns('savePlot'), 'Save Plot')
   )
 }
 
@@ -71,12 +63,10 @@ shinyModule <- function(input, output, session, data) {
     brewCol <- viridis(7)
     #brewCol <- brewer.pal(7, name = "YlGnBu")[1:myBins]
     if(myBins == 7){
-      rPal <- colorBin(brewCol, 1:max(values(SPr_l), na.rm=T), reverse = input$reverse,
-                       na.color = "transparent", bins=myBins)
+      rPal <- colorBin(brewCol, 1:max(values(SPr_l), na.rm=T), na.color = "transparent", bins=myBins)
       #rPal <- colorNumeric(brewCol, 1:max(values(SPr_l), na.rm=T), na.color = "transparent", reverse = T)
     }else{
-      rPal <- colorFactor(brewCol[1:myBins], as.factor(1:max(values(SPr_l), na.rm=T)), reverse = input$reverse, 
-                          na.color = "transparent")
+      rPal <- colorFactor(brewCol[1:myBins], as.factor(1:max(values(SPr_l), na.rm=T)), na.color = "transparent")
     }
     
     outl <- leaflet() %>% 
