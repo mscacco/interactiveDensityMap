@@ -4,7 +4,7 @@ source("ShinyModule.R")
 
 Sys.setenv(tz="UTC")
 
-inputFileName = "input2_geese.rds" ## Provided testing datasets: "input1_pigeons.rds", "input2_geese.rds", "input3_stork.rds", "input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
+inputFileName = "input3_stork.rds" ## Provided testing datasets: "input1_pigeons.rds", "input2_geese.rds", "input3_stork.rds", "input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
 outputFileName = "output.rds" ## optionally change the output file name
 
 if(file.exists("configuration.json")) {
