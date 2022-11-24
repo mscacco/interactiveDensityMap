@@ -1,6 +1,6 @@
 library("jsonlite")
 source("logger.R")
-source("ShinyModule.R")
+source("ShinyModule_verticalUI.R") #change shiny module input ShinyModule_horizUI.R or ShinyModule_verticalUI.R
 
 Sys.setenv(tz="UTC")
 

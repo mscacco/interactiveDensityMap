@@ -12,27 +12,34 @@ shinyModuleUserInterface <- function(id, label) {
   ns <- NS(id)
   
   tagList(
-    titlePanel("Rasterize n. observations/individuals/species/studies on interactive map"),
+    titlePanel("Interactive Density Map"),
     fluidPage(
-      fluidRow(
-        column(1, selectInput(inputId = ns("var"), 
-                              label = "Choose the variable you want to rasterize", 
-                              choices = list( "N. of GPS locations" = "n_locations", 
-                                              "N. of individuals" = "n_individuals", 
-                                              "N. of species" = "n_species", 
-                                              "N. of Movebank studies" = "n_studies"),
-                              selected = "n_locations")),
-        column(1, checkboxInput(inputId = ns("reverse"), 
-                                label = "Reverse color palette", 
-                                value = FALSE)), #by default false
-        column(3, sliderInput(inputId = ns("pxSize"), 
-                              label = "Choose the raster cell resolution in degrees", 
-                              value = 0.1, min = 0.01, max = 5)), # range in deg, from about 1 km to 500 km
-        #fluidRow(column(2, verbatimTextOutput("value")))
-      ),
-      leafletOutput(ns("leafmap"), height="70vh"),
-      actionButton(ns('savePlot'), 'Save Plot')
-      # downloadButton(ns('savePlot'), 'Save Plot')
+      fluidRow(class = "myRow1"), #we give a tag to the row to add a style below
+      sidebarLayout(
+        
+        sidebarPanel(verticalLayout(
+          selectInput(inputId = ns("var"), 
+                      label = "Variable to rasterize", 
+                      choices = list( "N. of GPS locations" = "n_locations", 
+                                      "N. of individuals" = "n_individuals", 
+                                      "N. of species" = "n_species", 
+                                      "N. of Movebank studies" = "n_studies"),
+                      selected = "n_locations"),
+          
+          sliderInput(inputId = ns("pxSize"), 
+                      label = "Raster pixel size (degrees)", 
+                      value = 0.05, min = 0.01, max = 5), # range in deg, from about 1 km to 500 km
+          
+          checkboxInput(inputId = ns("reverse"), 
+                        label = "Reverse color palette", 
+                        value = FALSE), #by default false
+        ), width = 3),
+        
+        mainPanel(leafletOutput(ns("leafmap"), height="82vh"),
+                  actionButton(ns('savePlot'), 'Save Plot'),
+                  # downloadButton(ns('savePlot'), 'Save Plot')
+                  width = 9)
+      ), tags$head(tags$style(".myRow1{height:25px;background-color: white;}"))
     )
   )
 }
@@ -41,20 +48,20 @@ shinyModule <- function(input, output, session, data) {
   current <- reactiveVal(data) 
   
   rmap <- reactive({
-    SP <- SpatialPointsDataFrame(coords=as.data.frame(data)[,c("location_long","location_lat")], 
+    SP <- SpatialPointsDataFrame(coords=coordinates(data), 
                                  data=as.data.frame(data), 
                                  proj4string=CRS("+proj=longlat +ellps=WGS84 +no_defs"))
     SP$rowNum <- 1:nrow(SP)
     rr <- raster(ext=extent(SP), resolution=input$pxSize, crs=CRS("+proj=longlat +ellps=WGS84 +no_defs"), vals=NULL)
     
     if(input$var=="n_locations"){
-      SPr <- rasterize(SP, rr, field="rowNum", fun="count", update=TRUE) #why do we need update=T?
+      SPr <- rasterize(SP, rr, field="rowNum", fun="count", update=TRUE)
       legendTitle <- "N. of GPS locations"
     }else if(input$var=="n_individuals"){
-      SPr <- rasterize(SP, rr, field="local_identifier", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
+      SPr <- rasterize(SP, rr, field="individual.local.identifier", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
       legendTitle <- "N. of individuals"
     }else if(input$var=="n_species"){
-      SPr <- rasterize(SP, rr, field="taxon_canonical_name", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
+      SPr <- rasterize(SP, rr, field="individual.taxon.canonical.name", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
       legendTitle <- "N. of species"
     } else if(input$var=="n_studies"){
       SPr <- rasterize(SP, rr, field="study.id", fun=function(x, ...){length(unique(na.omit(x)))}, update=TRUE)
@@ -68,11 +75,9 @@ shinyModule <- function(input, output, session, data) {
     }else{myBins <- 7}
     
     brewCol <- viridis(7)
-    #brewCol <- brewer.pal(7, name = "YlGnBu")[1:myBins]
     if(myBins == 7){
       rPal <- colorBin(brewCol, 1:max(values(SPr_l), na.rm=T), reverse = input$reverse,
                        na.color = "transparent", bins=myBins)
-      #rPal <- colorNumeric(brewCol, 1:max(values(SPr_l), na.rm=T), na.color = "transparent", reverse = T)
     }else{
       rPal <- colorFactor(brewCol[1:myBins], as.factor(1:max(values(SPr_l), na.rm=T)), reverse = input$reverse, 
                           na.color = "transparent")
