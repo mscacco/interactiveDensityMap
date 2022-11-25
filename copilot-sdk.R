@@ -1,11 +1,11 @@
 library("jsonlite")
 source("logger.R")
-source("ShinyModule_verticalUI.R") #change shiny module input ShinyModule_horizUI.R or ShinyModule_verticalUI.R
+source("ShinyModule.R") #change shiny module input ShinyModule_horizUI.R or ShinyModule_verticalUI.R
 
 Sys.setenv(tz="UTC")
 
 
-inputFileName = "moveAppsExample.rds" ## Provided testing datasets: "exampleData/input1_pigeons.rds", "exampleData/input2_geese.rds", "exampleData/input3_stork.rds", "exampleData/input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
+inputFileName = "exampleData/input1_pigeons.rds" ## Provided testing datasets: "moveAppsExample.rds" "exampleData/input1_pigeons.rds", "exampleData/input2_geese.rds", "exampleData/input3_stork.rds", "exampleData/input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
 outputFileName = "output.rds" ## optionally change the output file name
 
 if(file.exists("configuration.json")) {
