@@ -33,12 +33,12 @@ shinyModuleUserInterface <- function(id, label) {
           checkboxInput(inputId = ns("reverse"), 
                         label = "Reverse color palette", 
                         value = FALSE), #by default false
-        ), width = 3),
+        ), width = 2),
         
         mainPanel(leafletOutput(ns("leafmap"), height="82vh"),
                   actionButton(ns('savePlot'), 'Save Plot'),
                   # downloadButton(ns('savePlot'), 'Save Plot')
-                  width = 9)
+                  width = 10)
       ), tags$head(tags$style(".myRow1{height:25px;background-color: white;}"))
     )
   )
