@@ -46,7 +46,7 @@
       "middleInitials": null,
       "lastName": "Scacco",
       "email": "mscacco@ab.mpg.de",
-      "roles": ["author"],
+      "roles": ["author","creator"],
       "orcid": "0000-0003-4821-4051",
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
