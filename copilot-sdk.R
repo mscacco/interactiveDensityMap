@@ -5,7 +5,7 @@ source("ShinyModule_verticalUI.R") #change shiny module input ShinyModule_horizU
 Sys.setenv(tz="UTC")
 
 
-inputFileName = "moveAppsExample.rds" ## Provided testing datasets: "input1_pigeons.rds", "input2_geese.rds", "input3_stork.rds", "input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
+inputFileName = "moveAppsExample.rds" ## Provided testing datasets: "exampleData/input1_pigeons.rds", "exampleData/input2_geese.rds", "exampleData/input3_stork.rds", "exampleData/input4_goat.rds"  ## for own data: file saved as a .rds containing a object of class MoveStack
 outputFileName = "output.rds" ## optionally change the output file name
 
 if(file.exists("configuration.json")) {
