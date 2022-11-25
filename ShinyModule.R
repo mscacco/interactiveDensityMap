@@ -6,6 +6,7 @@ library(viridis)
 library(mapview)
 library(leaflet)
 library(leaflegend)
+library(shinycssloaders)
 # webshot::install_phantomjs()
 
 shinyModuleUserInterface <- function(id, label) {
@@ -35,7 +36,7 @@ shinyModuleUserInterface <- function(id, label) {
                         value = FALSE), #by default false
         ), width = 2),
         
-        mainPanel(leafletOutput(ns("leafmap"), height="82vh"),
+        mainPanel(withSpinner(leafletOutput(ns("leafmap"), height="82vh"),type=6, size=2),
                   actionButton(ns('savePlot'), 'Save Plot'),
                   # downloadButton(ns('savePlot'), 'Save Plot')
                   width = 10)
@@ -121,7 +122,7 @@ shinyModule <- function(input, output, session, data) {
   observeEvent("savePlot", {
     mymap <- rmap()
     mapshot( x = mymap
-             , remove_controls = "zoomControl"
+             , remove_controls = c("zoomControl","layersControl")
              , file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"DensityMap.png")
              , cliprect = "viewport"
              , selfcontained = FALSE)
