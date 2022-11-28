@@ -117,32 +117,32 @@ shinyModule <- function(input, output, session, data) {
     rmap()  
   })  
   
-  ## save plot to moveapps output folder to be able to link it with API
-  ## once shiny can save settings on moveapps, figure out how to save automatically, without hitting the save plot button
-  observeEvent("savePlot", {
-    mymap <- rmap()
-    mapshot( x = mymap
-             , remove_controls = c("zoomControl","layersControl")
-             , file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"DensityMap.png")
-             , cliprect = "viewport"
-             , selfcontained = FALSE)
-  })
+  # ## save plot to moveapps output folder to be able to link it with API.
+  # ## This would be the best option but in moveapps it does not work at the moment.
+  # ## once shiny can save settings on moveapps, figure out how to save automatically, without hitting the save plot button
+  # observeEvent("savePlot", {
+  #   mymap <- rmap()
+  #   mapshot( x = mymap
+  #            , remove_controls = c("zoomControl","layersControl")
+  #            , file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"DensityMap.png")
+  #            , cliprect = "viewport"
+  #            , selfcontained = FALSE)
+  # })
   
-  
-  # ### save map, takes some seconds ### here user can choose directory
-  # output$savePlot <- downloadHandler(
-  #   filename = function() {
-  #     paste("Leaflet_densityMap.png", sep="")
-  #   },
-  #   content = function(file) {
-  #     leafmap <- rmap()
-  #     mapshot( x = leafmap
-  #              , remove_controls = "zoomControl"
-  #              , file = file
-  #              , cliprect = "viewport"
-  #              , selfcontained = FALSE)
-  #   }
-  # )
+  ### save map, takes some seconds ### here user can choose directory
+  output$savePlot <- downloadHandler(
+    filename = function() {
+      paste("Leaflet_densityMap.png", sep="")
+    },
+    content = function(file) {
+      leafmap <- rmap()
+      mapshot( x = leafmap
+               , remove_controls = "zoomControl"
+               , file = file
+               , cliprect = "viewport"
+               , selfcontained = FALSE)
+    }
+  )
   return(reactive({ current() }))
 }
 
