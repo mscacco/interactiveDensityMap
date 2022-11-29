@@ -7,6 +7,7 @@ library(mapview)
 library(leaflet)
 library(leaflegend)
 library(shinycssloaders)
+library(webshot)
 # webshot::install_phantomjs()
 
 shinyModuleUserInterface <- function(id, label) {
@@ -37,8 +38,8 @@ shinyModuleUserInterface <- function(id, label) {
         ), width = 2),
         
         mainPanel(withSpinner(leafletOutput(ns("leafmap"), height="82vh"),type=6, size=2),
-                  actionButton(ns('savePlot'), 'Save Plot'),
-                  # downloadButton(ns('savePlot'), 'Save Plot')
+                  #actionButton(ns('savePlot'), 'Save Plot'), #for artefact in output
+                  downloadButton(ns('savePlot'), 'Save Plot'), # for downloading map on local computer
                   width = 10)
       ), tags$head(tags$style(".myRow1{height:25px;background-color: white;}"))
     )
@@ -117,9 +118,9 @@ shinyModule <- function(input, output, session, data) {
     rmap()  
   })  
   
-  # ## save plot to moveapps output folder to be able to link it with API.
-  # ## This would be the best option but in moveapps it does not work at the moment.
-  # ## once shiny can save settings on moveapps, figure out how to save automatically, without hitting the save plot button
+  ## save plot to moveapps output folder to be able to link it with API.
+  ## This would be the best option but in moveapps it does not work at the moment.
+  ## once shiny can save settings on moveapps, figure out how to save automatically, without hitting the save plot button
   # observeEvent("savePlot", {
   #   mymap <- rmap()
   #   mapshot( x = mymap
@@ -137,12 +138,16 @@ shinyModule <- function(input, output, session, data) {
     content = function(file) {
       leafmap <- rmap()
       mapshot( x = leafmap
-               , remove_controls = "zoomControl"
+               , remove_controls = c("zoomControl","layersControl")
                , file = file
                , cliprect = "viewport"
-               , selfcontained = FALSE)
+               , selfcontained = FALSE
+               , zoom = 0.5
+               , vwidth = 992*1, vheight = 744*1 #default size * 1.1
+      ) 
     }
   )
+  
   return(reactive({ current() }))
 }
 

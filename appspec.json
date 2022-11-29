@@ -28,6 +28,9 @@
       },
 	        {
         "name": "shinycssloaders"
+      },
+	        {
+        "name": "webshot"
       }
     ]
   },
