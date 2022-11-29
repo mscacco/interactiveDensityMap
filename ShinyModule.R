@@ -142,8 +142,8 @@ shinyModule <- function(input, output, session, data) {
                , file = file
                , cliprect = "viewport"
                , selfcontained = FALSE
-               , zoom = 0.5
-               , vwidth = 992*1, vheight = 744*1 #default size * 1.1
+               , zoom = 2
+               , vwidth = 992*2.5, vheight = 744*2.5 #default size * 1.1
       ) 
     }
   )
