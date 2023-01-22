@@ -2,7 +2,7 @@
 
 MoveApps
 
-Github repository: *github.com/movestore/interactiveDensityMap*
+Github repository: *github.com/mscacco/interactiveDensityMap*
 
 ## Description
 Density raster containing the number of instances of the specified variable overlaid on an interactive map. The user can choose between displaying the number of GPS locations per pixel, the number of individuals, the number of species or the number of Movebank studies. The variable is rasterized on a grid of user-defined resolution (pixel size) and overlaid on a interactive map. The map can be zoomed, the color palette reversed, and the background openstreetmap can be selected as `TopoMap`or `Aerial`. The map interactively updates when the user selects a different variable to display or a different pixel size.

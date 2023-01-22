@@ -8,7 +8,7 @@ library(leaflet)
 library(leaflegend)
 library(shinycssloaders)
 library(webshot)
-# webshot::install_phantomjs()
+# webshot::install_phantomjs() ## add in docker images in moveapps: R -e 'webshot::install_phantomjs()' 
 
 shinyModuleUserInterface <- function(id, label) {
   ns <- NS(id)
