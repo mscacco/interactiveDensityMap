@@ -7,6 +7,7 @@ library(mapview)
 library(leaflet)
 library(leaflegend)
 library(shinycssloaders)
+library(htmlwidgets)
 library(webshot)
 # webshot::install_phantomjs() ## add in docker images in moveapps: R -e 'webshot::install_phantomjs()' 
 
@@ -39,7 +40,7 @@ shinyModuleUserInterface <- function(id, label) {
         
         mainPanel(withSpinner(leafletOutput(ns("leafmap"), height="82vh"),type=6, size=2),
                   #actionButton(ns('savePlot'), 'Save Plot'), #for artefact in output
-                  downloadButton(ns('savePlot'), 'Save Plot'), # for downloading map on local computer
+                  downloadButton(ns('savePlot'), 'Save as Html'), # for downloading map on local computer
                   width = 10)
       ), tags$head(tags$style(".myRow1{height:25px;background-color: white;}"))
     )
@@ -132,19 +133,21 @@ shinyModule <- function(input, output, session, data) {
   
   ### save map, takes some seconds ### here user can choose directory
   output$savePlot <- downloadHandler(
-    filename = function() {
-      paste("Leaflet_densityMap.png", sep="")
-    },
+    filename = "Leaflet_densityMap.html",
     content = function(file) {
-      leafmap <- rmap()
-      mapshot( x = leafmap
-               , remove_controls = c("zoomControl","layersControl")
-               , file = file
-               , cliprect = "viewport"
-               , selfcontained = FALSE
-               , zoom = 1.5
-               , vwidth = 992*2, vheight = 744*2 #default size * 1.1
-      ) 
+      saveWidget(
+        widget=rmap(),
+        file=file
+      )
+      #leafmap <- rmap()
+      #mapshot( x = leafmap
+      #         , remove_controls = c("zoomControl","layersControl")
+      #         , file = file
+      #         , cliprect = "viewport"
+      #         , selfcontained = FALSE
+      #         , zoom = 1.5
+      #         , vwidth = 992*2, vheight = 744*2 #default size * 1.1
+      #) 
     }
   )
   

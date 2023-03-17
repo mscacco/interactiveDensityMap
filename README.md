@@ -21,7 +21,7 @@ Shiny user interface (UI) and MoveStack in Movebank format.
 ### Artefacts
 None.
 
-The `Save Plot` button enables a local download of the created plot.
+The `Save to Html` button enables a local download of the created plot as html.
 <!---
 `DensityMap.png`: The visualization produced by the App can be saved (via "Save Plot") in *.png* format to the "Output" folder in Moveapps.
 -->
