@@ -132,9 +132,7 @@ shinyModule <- function(input, output, session, data) {
   
   ### save map, takes some seconds ### here user can choose directory
   output$savePlot <- downloadHandler(
-    filename = function() {
-      paste("Leaflet_densityMap.png", sep="")
-    },
+    filename = "Leaflet_densityMap.png",
     content = function(file) {
       leafmap <- rmap()
       mapshot( x = leafmap
